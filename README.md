@@ -5,10 +5,17 @@ A module that checks for unused and missing dependencies
 ## API
 
 `reallyRequire(modulePath, options)`:
- - `modulePath`: String, full or relative path to module
- - `options`: String, path to package.json. Object, values of package.json. Default, `path.join(modulePath, 'package.json')`
- - `sourceGlob`: String[], globs to use for searching the source files. Default, `['*.js', 'src/**/*.js', 'lib/**/*.js']`
- - `nodeModules`: String[], paths to search in for modules. Default, `[path.join(modulePath, 'node_modules')]`
+- `modulePath`:
+  - String: Full or relative path to module
+- `options.packageJSON`:
+  - String: Path to package.json. Object, values of package.json.
+  - Default: `path.join(modulePath, 'package.json')`
+- `options.sourceGlob`:
+  - String[]: Globs to use for searching the source files.
+  - Default: `['*.js', 'src/**/*.js', 'lib/**/*.js']`
+- `options.nodeModules`:
+  - String[]: paths to search in for modules.
+  - Default: `[path.join(modulePath, 'node_modules')]`
 
 Returns:
  - `result.missing`: Object[] Messages about missing dependencies
