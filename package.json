@@ -1,0 +1,31 @@
+{
+  "name": "really-require",
+  "version": "0.0.1",
+  "description": "A module that checks for unused and missing dependencies",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "verify-dependencies",
+    "package.json",
+    "unused",
+    "missing",
+    "check"
+  ],
+  "author": "Maciej Krüger <mkg20001@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "acorn": "^5.7.1",
+    "glob": "^7.1.2"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mkg20001/really-require.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mkg20001/really-require/issues"
+  },
+  "homepage": "https://github.com/mkg20001/really-require#readme"
+}
