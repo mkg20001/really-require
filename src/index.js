@@ -20,7 +20,7 @@ const NATIVE_MODULES = [ // src https://www.w3schools.com/nodejs/ref_modules.asp
 function getRequire (str) { // parses str with acorn and gets require() calls
   let req = []
 
-  walk.full(acorn.parse(str), node => {
+  walk.full(acorn.parse(str, { ecmaVersion: '10' }), node => {
     if (node.type === 'CallExpression' && node.callee.name === 'require') {
       let arg = node.arguments[0]
       if (arg && arg.type === 'Literal') {
@@ -112,7 +112,7 @@ async function reallyRequire (modulePath, options, cb) {
   modulePath = fs.realpathSync(modulePath)
   if (!options) { options = {} }
   if (!options.packageJSON) { options.packageJSON = path.join(modulePath, 'package.json') }
-  if (!options.sourceGlob) { options.sourceGlob = ['*.js', 'src/**/*.js', 'lib/**/*.js'] } // unsafe alternative: !(node_modules)/**/*.js
+  if (!options.sourceGlob) { options.sourceGlob = ['*.js', 'src/**/*.js', 'lib/**/*.js'] } // unsafe alternative: !(node_modules|test)/**/*.js
   if (!Array.isArray(options.sourceGlob)) { options.sourceGlob = [options.sourceGlob] }
   if (!options.nodeModules) { options.nodeModules = [ path.join(modulePath, 'node_modules') ] }
 
