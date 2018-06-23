@@ -1,5 +1,7 @@
 'use strict'
 
+/* eslint-disable max-depth */
+
 const acorn = require('acorn')
 const walk = require('acorn/dist/walk')
 const path = require('path')
@@ -9,10 +11,11 @@ const promisify = require('util').promisify
 const read = promisify(fs.readFile)
 const glob = require('glob')
 
-const NATIVE_MODULES = [
+const NATIVE_MODULES = [ // src https://www.w3schools.com/nodejs/ref_modules.asp
   'assert', 'buffer', 'child_process', 'cluster', 'crypto', 'dgram', 'dns', 'domain', 'events',
   'fs', 'http', 'https', 'net', 'os', 'path', 'punycode', 'querystring', 'readline', 'stream',
-  'string_decoder', 'timers', 'tls', 'tty', 'url', 'util', 'v8', 'vm', 'zlib'] // src https://www.w3schools.com/nodejs/ref_modules.asp
+  'string_decoder', 'timers', 'tls', 'tty', 'url', 'util', 'v8', 'vm', 'zlib'
+]
 
 function getRequire (str) { // parses str with acorn and gets require() calls
   let req = []
@@ -101,7 +104,7 @@ function createWarning ({content, offset, file, dep, check, error}, message) {
         column: columnTo
       }
     },
-    dependency: dep.name,
+    dependency: dep.name
   }
 }
 
@@ -184,3 +187,5 @@ async function reallyRequire (modulePath, options, cb) {
 
   return result
 }
+
+module.exports = reallyRequire
