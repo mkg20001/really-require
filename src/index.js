@@ -123,8 +123,8 @@ async function reallyRequire (modulePath, options, cb) {
     throw new Error('Couldn\'t read ' + options.packageJSON + ': ' + e.toString())
   }
 
-  options.deps = Object.keys(pkg.dependencies)
-  options.devDeps = Object.keys(pkg.devDependencies)
+  options.deps = Object.keys(pkg.dependencies || {})
+  options.devDeps = Object.keys(pkg.devDependencies || {})
 
   let unused = Object.keys(pkg.dependencies)
 
