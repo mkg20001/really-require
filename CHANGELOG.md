@@ -1,3 +1,13 @@
+<a name="0.0.4"></a>
+## [0.0.4](https://github.com/mkg20001/really-require/compare/v0.0.3...v0.0.4) (2018-06-23)
+
+
+### Bug Fixes
+
+* dont crash on missing fields ([49b6d83](https://github.com/mkg20001/really-require/commit/49b6d83))
+
+
+
 <a name="0.0.3"></a>
 ## [0.0.3](https://github.com/mkg20001/really-require/compare/v0.0.2...v0.0.3) (2018-06-23)
 
