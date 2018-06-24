@@ -16,6 +16,13 @@ A module that checks for unused and missing dependencies
 - `options.nodeModules`:
   - String[]: paths to search in for modules.
   - Default: `[path.join(modulePath, 'node_modules')]`
+- `options.mute.unused`:
+  - String[]: Mute warnings about these dependencies being unused
+- `options.mute.indirect`:
+  - String[]: Mute warnings about these dependencies being only indirectly installed.
+    Note that this does not mute the errors if a dependency is also missing from `node_modules`
+
+_The values of `options.mute` can also be added directly to the package.json under the field `reallyRequireMute`_
 
 Returns:
  - `result.missing`: Object[] Messages about missing dependencies

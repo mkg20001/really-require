@@ -9,7 +9,8 @@ const fs = require('fs')
 const promisify = require('util').promisify
 
 const read = promisify(fs.readFile)
-const glob = require('glob')
+const _glob = require('glob')
+const glob = promisify((glob, cb) => _glob(glob, cb))
 
 const NATIVE_MODULES = [ // src https://www.w3schools.com/nodejs/ref_modules.asp
   'assert', 'buffer', 'child_process', 'cluster', 'crypto', 'dgram', 'dns', 'domain', 'events',
@@ -123,6 +124,9 @@ async function reallyRequire (modulePath, options, cb) {
     throw new Error('Couldn\'t read ' + options.packageJSON + ': ' + e.toString())
   }
 
+  if (!options.mute) { options.mute = pkg.reallyRequireMute }
+  if (!options.mute) { options.mute = { unused: [], indirect: [] } }
+
   options.deps = Object.keys(pkg.dependencies || {})
   options.devDeps = Object.keys(pkg.devDependencies || {})
 
@@ -130,7 +134,7 @@ async function reallyRequire (modulePath, options, cb) {
 
   let files = []
   for (let i1 = 0; i1 < options.sourceGlob.length; i1++) {
-    files = files.concat(glob.sync(modulePath + '/' + options.sourceGlob[i1]))
+    files = files.concat(await glob(modulePath + '/' + options.sourceGlob[i1]))
   }
 
   let result = {
@@ -163,11 +167,11 @@ async function reallyRequire (modulePath, options, cb) {
           }
         } else if (dep.isModule && !check.isNative) {
           unused = unused.filter(d => d !== dep.name)
-          if (check.isDevDep && !check.isDep) {
+          if (check.isDevDep && !check.isDep && options.mute.indirect.indexOf(dep.name) === -1) {
             result.missing.push(createWarning({content, offset, file, dep, check}, 'Dependency "' + dep.name + '" is installed as devDependency!'))
           } else if (!check.installed) {
             result.missing.push(createWarning({content, offset, file, dep, check, error: true}, 'Dependency "' + dep.name + '" is missing from package.json and node_modules!'))
-          } else if (!check.isDep) {
+          } else if (!check.isDep && options.mute.indirect.indexOf(dep.name) === -1) {
             result.missing.push(createWarning({content, offset, file, dep, check}, 'Dependency "' + dep.name + '" is missing from package.json! It is only indirectly installed and might be missing in production!'))
           }
         }
@@ -178,11 +182,13 @@ async function reallyRequire (modulePath, options, cb) {
   }
 
   unused.forEach(u => {
-    result.unused.push({
-      dependency: u,
-      error: false,
-      message: 'Dependency "' + u + '" is never used! Move it to devDependencies or remove it!'
-    })
+    if (options.mute.unused.indexOf(u) === -1) {
+      result.unused.push({
+        dependency: u,
+        error: false,
+        message: 'Dependency "' + u + '" is never used! Move it to devDependencies or remove it!'
+      })
+    }
   })
 
   return result
